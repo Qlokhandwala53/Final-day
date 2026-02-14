@@ -21,7 +21,7 @@ body{
   text-align:center;
 }
 
-/* Cinematic Background */
+/* Background */
 body::before{
   content:"";
   position:fixed;
@@ -30,75 +30,24 @@ body::before{
   background:url("QA.jpg") no-repeat center center/cover;
   z-index:-2;
   animation:zoomBG 30s infinite alternate ease-in-out;
-  transition:opacity 1.5s ease;
 }
 @keyframes zoomBG{
   from{transform:scale(1);}
-  to{transform:scale(1.15);}
+  to{transform:scale(1.08);}
 }
 
-/* Dark Overlay */
+/* Overlay */
 body::after{
   content:"";
   position:fixed;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.5);
+  background:rgba(0,0,0,0.4);
   z-index:-1;
-  transition:opacity 1.5s ease;
 }
 
-/* Glass Card */
-.glass{
-  backdrop-filter:blur(15px);
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.3);
-  padding:40px;
-  border-radius:25px;
-  box-shadow:0 0 40px rgba(255,0,128,0.4);
-  width:90%;
-  max-width:450px;
-  transition:opacity 1.5s ease;
-}
-
-/* Glowing Names */
-.names{
-  font-family:'Great Vibes',cursive;
-  font-size:40px;
-  color:#ff4da6;
-  animation:glow 2s infinite alternate;
-}
-@keyframes glow{
-  from{text-shadow:0 0 10px #ff4da6;}
-  to{text-shadow:0 0 40px #ff1a75,0 0 60px #ff66cc;}
-}
-
-.heart3d{
-  font-size:60px;
-  margin:15px 0;
-  animation:float 3s infinite ease-in-out;
-}
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-15px);}
-}
-
-button{
-  padding:12px 25px;
-  margin-top:15px;
-  border:none;
-  border-radius:30px;
-  background:#ff1a75;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 0 15px #ff1a75;
-  transition:0.3s;
-}
-button:hover{transform:scale(1.1);}
-
-/* Tap Overlay */
-#tapOverlay{
+/* Intro Scene */
+#intro{
   position:fixed;
   width:100%;
   height:100%;
@@ -106,77 +55,199 @@ button:hover{transform:scale(1.1);}
   display:flex;
   justify-content:center;
   align-items:center;
+  flex-direction:column;
   z-index:100;
-  font-size:22px;
-  letter-spacing:1px;
-  animation:pulse 1.5s infinite;
+  font-size:26px;
+  animation:fadeIntro 4s forwards;
 }
-@keyframes pulse{
-  0%{opacity:0.6;}
-  50%{opacity:1;}
-  100%{opacity:0.6;}
+@keyframes fadeIntro{
+  0%{opacity:1;}
+  80%{opacity:1;}
+  100%{opacity:0;visibility:hidden;}
 }
 
-/* Fade Out Class */
-.fadeOut{
+/* Main Card */
+.card{
+  background:rgba(0,0,0,0.6);
+  padding:40px;
+  border-radius:25px;
+  width:90%;
+  max-width:500px;
+  box-shadow:0 0 40px rgba(255,0,100,0.5);
+}
+
+/* Names */
+.names{
+  font-family:'Great Vibes',cursive;
+  font-size:42px;
+  color:#ff4da6;
+  animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+  from{text-shadow:0 0 10px #ff4da6;}
+  to{text-shadow:0 0 40px #ff1a75;}
+}
+
+/* I Love You Writing */
+.loveText{
+  margin-top:15px;
+  font-size:22px;
+  overflow:hidden;
+  white-space:nowrap;
+  border-right:2px solid white;
+  width:0;
+  animation:typing 4s steps(20,end) forwards;
+}
+@keyframes typing{
+  to{width:100%;}
+}
+
+/* Button */
+button{
+  margin-top:20px;
+  padding:12px 30px;
+  border:none;
+  border-radius:30px;
+  background:#ff1a75;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 20px #ff1a75;
+  transition:0.3s;
+}
+button:hover{transform:scale(1.1);}
+
+/* Ring Animation */
+.ring{
+  font-size:60px;
+  position:fixed;
+  bottom:-100px;
+  left:50%;
+  transform:translateX(-50%);
   opacity:0;
 }
+
+/* Rose Petals */
+.petals span{
+position:absolute;
+top:-20px;
+font-size:24px;
+animation:fall linear infinite;
+}
+@keyframes fall{
+to{transform:translateY(110vh);opacity:0;}
+}
+
+/* Explosion */
+.explosion span{
+position:absolute;
+font-size:26px;
+animation:explode 1s forwards;
+}
+@keyframes explode{
+to{
+transform:translate(var(--x),var(--y)) scale(0.5);
+opacity:0;
+}
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="tapOverlay">
-  Tap Anywhere To Start The Music 🎵
+<div id="intro">
+  🎬 A Love Story Begins...
+  <div style="margin-top:15px;font-size:18px;">Happy Valentine’s Day ❤️</div>
 </div>
 
-<div class="glass" id="mainCard">
-  <div class="names">
-    Qusai ❤️ Arefa
-  </div>
+<div class="card" id="mainCard">
 
-  <div class="heart3d">💖</div>
-
-  <button onclick="slowRedirect()">Message Me 💬</button>
+<div class="names">
+Qusai ❤️ Arefa
 </div>
+
+<div class="loveText">
+I Love You Forever ❤️
+</div>
+
+<button onclick="proposal()">Say Yes 💍</button>
+
+</div>
+
+<div class="petals" id="petals"></div>
 
 <audio id="bgMusic" loop>
-  <source src="Lovestory.mp3" type="audio/mp3">
+  <source src="Lovestory.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* Start Music on Tap */
-const overlay = document.getElementById("tapOverlay");
-const music = document.getElementById("bgMusic");
-
-overlay.addEventListener("click", function(){
-  music.play().then(()=>{
-    overlay.style.opacity="0";
-    setTimeout(()=>overlay.style.display="none",800);
-  }).catch(()=>{});
+/* Start Music After First Tap */
+document.body.addEventListener("click",function(){
+let music=document.getElementById("bgMusic");
+if(music.paused){
+music.play().catch(()=>{});
+}
 });
 
-/* Slow Romantic Redirect */
-function slowRedirect(){
+/* Continuous Rose Petals */
+for(let i=0;i<30;i++){
+let petal=document.createElement("span");
+petal.innerHTML="🌹";
+petal.style.left=Math.random()*100+"vw";
+petal.style.animationDuration=(5+Math.random()*5)+"s";
+document.getElementById("petals").appendChild(petal);
+}
 
-  /* Fade out everything slowly */
-  document.body.classList.add("fadeOut");
-  document.getElementById("mainCard").classList.add("fadeOut");
+/* Proposal Animation */
+function proposal(){
 
-  /* Slow music fade */
-  let fadeAudio = setInterval(()=>{
-    if(music.volume > 0.05){
-      music.volume -= 0.05;
-    } else {
-      music.volume = 0;
-      clearInterval(fadeAudio);
-    }
-  },200);
+  /* Rose Explosion */
+  for(let i=0;i<25;i++){
+    let rose=document.createElement("span");
+    rose.innerHTML="🌹";
+    rose.style.left="50%";
+    rose.style.top="50%";
+    rose.style.setProperty("--x",(Math.random()*400-200)+"px");
+    rose.style.setProperty("--y",(Math.random()*400-200)+"px");
+    rose.classList.add("explosion");
+    document.body.appendChild(rose);
+    setTimeout(()=>rose.remove(),1000);
+  }
 
-  /* Redirect after 3 seconds */
+  /* Ring Animation */
+  let ring=document.createElement("div");
+  ring.innerHTML="💍";
+  ring.className="ring";
+  document.body.appendChild(ring);
+
   setTimeout(()=>{
-    window.open("https://wa.me/918238519348","_blank");
+    ring.style.transition="2s ease";
+    ring.style.bottom="40%";
+    ring.style.opacity="1";
+  },100);
+
+  /* Slow Fade & Redirect */
+  setTimeout(()=>{
+    let music=document.getElementById("bgMusic");
+
+    let fade=setInterval(()=>{
+      if(music.volume>0.05){
+        music.volume-=0.05;
+      }else{
+        music.volume=0;
+        clearInterval(fade);
+      }
+    },200);
+
+    document.body.style.transition="2s";
+    document.body.style.opacity="0";
+
+    setTimeout(()=>{
+      window.location.href="https://api.whatsapp.com/send?phone=9182385519348&text=I%20Love%20You%20Forever%20❤️";
+    },3000);
+
   },3000);
 }
 
