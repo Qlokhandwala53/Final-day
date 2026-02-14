@@ -27,7 +27,7 @@ body::before{
   position:fixed;
   width:100%;
   height:100%;
-  background:url("QA.jpg") no-repeat center center/cover;
+  background:url("QA.jpeg") no-repeat center center/cover;
   z-index:-2;
   animation:zoomBG 30s infinite alternate ease-in-out;
 }
@@ -46,7 +46,7 @@ body::after{
   z-index:-1;
 }
 
-/* Intro Scene */
+/* Intro */
 #intro{
   position:fixed;
   width:100%;
@@ -66,7 +66,7 @@ body::after{
   100%{opacity:0;visibility:hidden;}
 }
 
-/* Main Card */
+/* Card */
 .card{
   background:rgba(0,0,0,0.6);
   padding:40px;
@@ -88,18 +88,11 @@ body::after{
   to{text-shadow:0 0 40px #ff1a75;}
 }
 
-/* I Love You Writing */
+/* Love Text */
 .loveText{
   margin-top:15px;
-  font-size:22px;
-  overflow:hidden;
-  white-space:nowrap;
-  border-right:2px solid white;
-  width:0;
-  animation:typing 4s steps(20,end) forwards;
-}
-@keyframes typing{
-  to{width:100%;}
+  font-size:20px;
+  min-height:130px;
 }
 
 /* Button */
@@ -117,7 +110,7 @@ button{
 }
 button:hover{transform:scale(1.1);}
 
-/* Ring Animation */
+/* Ring */
 .ring{
   font-size:60px;
   position:fixed;
@@ -129,28 +122,27 @@ button:hover{transform:scale(1.1);}
 
 /* Rose Petals */
 .petals span{
-position:absolute;
-top:-20px;
-font-size:24px;
-animation:fall linear infinite;
+  position:absolute;
+  top:-20px;
+  font-size:24px;
+  animation:fall linear infinite;
 }
 @keyframes fall{
-to{transform:translateY(110vh);opacity:0;}
+  to{transform:translateY(110vh);opacity:0;}
 }
 
 /* Explosion */
-.explosion span{
-position:absolute;
-font-size:26px;
-animation:explode 1s forwards;
+.explode{
+  position:absolute;
+  font-size:26px;
+  animation:explode 1s forwards;
 }
 @keyframes explode{
-to{
-transform:translate(var(--x),var(--y)) scale(0.5);
-opacity:0;
+  to{
+    transform:translate(var(--x),var(--y)) scale(0.5);
+    opacity:0;
+  }
 }
-}
-
 </style>
 </head>
 
@@ -158,21 +150,19 @@ opacity:0;
 
 <div id="intro">
   🎬 A Love Story Begins...
-  <div style="margin-top:15px;font-size:18px;">Happy Valentine’s Day ❤️</div>
+  <div style="margin-top:15px;font-size:18px;">
+    Happy Valentine’s Day ❤️
+  </div>
 </div>
 
-<div class="card" id="mainCard">
+<div class="card">
+  <div class="names">
+    Qusai ❤️ Arefa
+  </div>
 
-<div class="names">
-Qusai ❤️ Arefa
-</div>
+  <div class="loveText" id="typeText"></div>
 
-<div class="loveText">
-I Love You Forever ❤️
-</div>
-
-<button onclick="proposal()">Say Yes 💍</button>
-
+  <button onclick="proposal()">Say Yes 💍</button>
 </div>
 
 <div class="petals" id="petals"></div>
@@ -183,21 +173,45 @@ I Love You Forever ❤️
 
 <script>
 
-/* Start Music After First Tap */
+/* iPhone Safe Music */
 document.body.addEventListener("click",function(){
-let music=document.getElementById("bgMusic");
-if(music.paused){
-music.play().catch(()=>{});
-}
+  let music=document.getElementById("bgMusic");
+  if(music.paused){
+    music.play().catch(()=>{});
+  }
 });
 
-/* Continuous Rose Petals */
+/* Slow Bollywood Typewriter */
+const text = `Happy Valentine’s Day My Love ❤️
+Sorry for the delay jaan…
+Even if it’s long distance,
+Dil toh sirf tumhara hai 💖
+Main yahan hoon… par meri duniya tum ho 🌍❤️
+Filmy lagta hoga…
+Par meri kahaani sirf tum ho 💞
+I Love You Forever ♾️`;
+
+let i = 0;
+let speed = 55;
+
+function typeWriter(){
+  if(i < text.length){
+    document.getElementById("typeText").innerHTML += 
+      text.charAt(i) === "\n" ? "<br>" : text.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+window.onload = typeWriter;
+
+/* Continuous Petals */
 for(let i=0;i<30;i++){
-let petal=document.createElement("span");
-petal.innerHTML="🌹";
-petal.style.left=Math.random()*100+"vw";
-petal.style.animationDuration=(5+Math.random()*5)+"s";
-document.getElementById("petals").appendChild(petal);
+  let petal=document.createElement("span");
+  petal.innerHTML="🌹";
+  petal.style.left=Math.random()*100+"vw";
+  petal.style.animationDuration=(6+Math.random()*5)+"s";
+  document.getElementById("petals").appendChild(petal);
 }
 
 /* Proposal Animation */
@@ -211,7 +225,7 @@ function proposal(){
     rose.style.top="50%";
     rose.style.setProperty("--x",(Math.random()*400-200)+"px");
     rose.style.setProperty("--y",(Math.random()*400-200)+"px");
-    rose.classList.add("explosion");
+    rose.className="explode";
     document.body.appendChild(rose);
     setTimeout(()=>rose.remove(),1000);
   }
@@ -228,27 +242,28 @@ function proposal(){
     ring.style.opacity="1";
   },100);
 
-  /* Slow Fade & Redirect */
+  /* Faster Fade & Redirect */
   setTimeout(()=>{
+
     let music=document.getElementById("bgMusic");
 
     let fade=setInterval(()=>{
-      if(music.volume>0.05){
-        music.volume-=0.05;
+      if(music.volume>0.1){
+        music.volume-=0.1;
       }else{
         music.volume=0;
         clearInterval(fade);
       }
-    },200);
+    },150);
 
-    document.body.style.transition="2s";
+    document.body.style.transition="1.5s";
     document.body.style.opacity="0";
 
     setTimeout(()=>{
-      window.location.href="https://api.whatsapp.com/send?phone=9182385519348&text=I%20Love%20You%20Forever%20❤️";
-    },3000);
+      window.location.href="https://api.whatsapp.com/send?phone=91823519348&text=Happy%20Valentine's%20Day%20My%20Love%20❤️%20Even%20if%20it’s%20long%20distance,%20my%20heart%20belongs%20to%20you%20forever%20💖";
+    },1500);
 
-  },3000);
+  },2000);
 }
 
 </script>
